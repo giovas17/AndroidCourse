@@ -16,7 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class NetworkConnection extends AsyncTask<Void,Void,Boolean>{
+public class NetworkConnection extends AsyncTask<String,Void,Boolean>{
     private final String Tag = NetworkConnection.class.getSimpleName();
     private Context context;
     private String response;
@@ -27,17 +27,17 @@ public class NetworkConnection extends AsyncTask<Void,Void,Boolean>{
         this.listener=networkConnectionInterface;
     }
 
-
     @Override
-    protected Boolean doInBackground(Void... voids) {
+    protected Boolean doInBackground(String... params) {
+        String endpoint = params[0];
         boolean respuesta=false;
         final String BASE_URL="http://api.themoviedb.org/3/movie";
-        final String POPULAR_PATH="popular";
+
         final String API_KEY_PARAM="api_key";
 
         //construcción url
         Uri uriToAPI = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(POPULAR_PATH)
+                .appendPath(endpoint)
                 .appendQueryParameter(API_KEY_PARAM, context.getString(R.string.api_key_value))
                 .build();
         Log.d(Tag,uriToAPI.toString());

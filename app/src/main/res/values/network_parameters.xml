@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:cuvalles="http://schemas.android.com/tools">
     <string name="api_key_value" translatable="false">5fb6d918f1926240b59fc040268a3a3b</string>
     <string name="results_json_param" translatable="false">results</string>
     <string name="poster_path_json_param" translatable="false">poster_path</string>
     <string name="id_json_param" translatable="false">id</string>
     <string name="title_json_param" translatable="false">original_title</string>
     <string name="base_path_image_url" translatable="false">http://image.tmdb.org/t/p/</string>
+    <string name="endpoint_videos" translatable="false"><cuvalles:g idMovie="value">%1$s</cuvalles:g>/videos</string>
+    <string name="endpoint_reviews" translatable="false"><cuvalles:g idMovie="value">%1$s</cuvalles:g>/reviews</string>
 </resources>
