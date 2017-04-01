@@ -1,8 +1,10 @@
 package com.itexico.androidcourse;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Uri.Builder builder = Uri.parse("http://www.google.com").buildUpon();
+        builder.appendPath("param");
+        builder.appendPath("slack");
+        builder.appendQueryParameter("id","0923849023");
+        builder.appendQueryParameter("name","Giovas");
+        Uri finalUri = builder.build();
+        Log.d("Uri builder","url: " + finalUri.toString());
 
     }
 

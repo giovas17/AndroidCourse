@@ -1,5 +1,6 @@
 package com.itexico.androidcourse;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,8 @@ public class SimpleListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(SimpleListActivity.this,items[position],Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SimpleListActivity.this,SimpleCustomList.class);
+                startActivity(intent);
             }
         });
     }
