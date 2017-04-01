@@ -1,13 +1,10 @@
 package com.itexico.adapters;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.itexico.androidcourse.R;
@@ -16,34 +13,43 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-/**
- * Created by darkgeat on 10/03/2017.
- */
 
-public class MoviesAdapter extends ArrayAdapter<Movie> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder>{
+    private Context c;
+    private ArrayList<Movie> movies;
 
-    private ArrayList<Movie> data;
-    private Context context;
-
-    public MoviesAdapter(@NonNull Context context, ArrayList<Movie> movies) {
-        super(context, R.layout.item_movie,movies);
-        data = movies;
-        this.context = context;
+    public MoviesAdapter(Context c, ArrayList<Movie> movies){
+        this.c=c;
+        this.movies=movies;
     }
 
     @Override
-    public int getCount() {
-        return data.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(c).inflate(R.layout.item_movie,parent,false);
+        ViewHolder holder = new ViewHolder(view);
+        view.setTag(holder);
+        return holder;
     }
 
-    @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View viewParent = LayoutInflater.from(context).inflate(R.layout.item_movie,parent,false);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Picasso.with(c).load(movies.get(position).getPosterPath()).into(holder.image);
 
-        ImageView imagePoster = (ImageView)viewParent.findViewById(R.id.imageMovieItem);
-        Picasso.with(context).load(data.get(position).getPoster()).into(imagePoster);
 
-        return viewParent;
+    }
+
+    @Override
+    public int getItemCount() {
+        return movies.size();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
+        final ImageView image;
+
+        public ViewHolder(View v){
+            super(v);
+            image = (ImageView) v.findViewById(R.id.imageMoviePoster);
+
+        }
     }
 }

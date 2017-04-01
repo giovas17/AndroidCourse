@@ -11,29 +11,34 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by darkgeat on 10/03/2017.
- */
-
 public class JsonParser {
 
     public static ArrayList<Movie> getMovies(Context context, String JSONStr){
-        ArrayList<Movie> movies = new ArrayList<>();
+        ArrayList<Movie> pelis = new ArrayList<>();
+
         try {
-            JSONObject object = new JSONObject(JSONStr);
-            JSONArray arrayMovies = object.getJSONArray(context.getString(R.string.results_json_param));
-            for (int i = 0 ; i < arrayMovies.length() ; i++){
-                JSONObject movieObject = arrayMovies.getJSONObject(i);
-                int id = movieObject.getInt(context.getString(R.string.id_json_param));
-                String title = movieObject.getString(context.getString(R.string.title_json_param));
-                String poster = movieObject.getString(context.getString(R.string.poster_path_json_param));
-                poster = context.getString(R.string.base_path_image_url) + "w185/" + poster;
-                Movie movie = new Movie(id,title,poster);
-                movies.add(movie);
+            JSONObject objetoPrincipal = new JSONObject(JSONStr);
+            JSONArray arregloDePeliculas = objetoPrincipal.getJSONArray(context.getString(R.string.results_json_param));
+
+            for (int i = 0; i<arregloDePeliculas.length();i++){
+                JSONObject pelicula = arregloDePeliculas.getJSONObject(i);
+                int id = pelicula.getInt(context.getString(R.string.id_json_param));
+                String titulo = pelicula.getString(context.getString(R.string.title_json_param));
+                String posterPath = pelicula.getString(context.getString(R.string.poster_path_json_param));
+                posterPath = context.getString(R.string.base_path_image_url)+context.getString(R.string.image_size_default)+"/"+posterPath;
+
+                Movie movie = new Movie(id,titulo,"",posterPath);
+                pelis.add(movie);
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return movies;
+
+        return pelis;
     }
+
+
+
+
 }

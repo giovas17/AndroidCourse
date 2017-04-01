@@ -4,9 +4,9 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageMovieItem"
+        android:id="@+id/imageMoviePoster"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="150dp"/>
-
+        android:minHeight="310dp"
+        android:scaleType="centerCrop" />
 </LinearLayout>

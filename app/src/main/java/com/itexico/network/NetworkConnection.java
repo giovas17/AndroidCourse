@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.itexico.androidcourse.R;
-import com.itexico.interfaces.NetworkResponseListener;
+import com.itexico.interfaces.NetworkConnectionInterface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,93 +16,85 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by darkgeat on 10/03/2017.
- */
-
-public class NetworkConnection extends AsyncTask<Void,Void,Boolean> {
-
-    private final String NETWORK_TAG = NetworkConnection.class.getSimpleName();
-    private String responseJsonStr;
+public class NetworkConnection extends AsyncTask<Void,Void,Boolean>{
+    private final String Tag = NetworkConnection.class.getSimpleName();
     private Context context;
-    private NetworkResponseListener listener;
+    private String response;
+    private NetworkConnectionInterface listener;
 
-    public NetworkConnection(Context context, NetworkResponseListener listener){
-        this.context = context;
-        this.listener = listener;
+    public NetworkConnection(Context context, NetworkConnectionInterface networkConnectionInterface){
+        this.context=context;
+        this.listener=networkConnectionInterface;
     }
 
+
     @Override
-    protected Boolean doInBackground(Void... params) {
-        Uri requestURL = null;
-        final String BASE_URL = "http://api.themoviedb.org/3";
-        final String MOVIE_PATH = "movie";
-        final String POPULAR_PATH = "popular";
-        final String API_KEY_PARAM = "api_key";
+    protected Boolean doInBackground(Void... voids) {
+        boolean respuesta=false;
+        final String BASE_URL="http://api.themoviedb.org/3/movie";
+        final String POPULAR_PATH="popular";
+        final String API_KEY_PARAM="api_key";
 
-        //Construction of the URL
-        requestURL = Uri.parse(BASE_URL).buildUpon()
-                .appendPath(MOVIE_PATH)
+        //construcción url
+        Uri uriToAPI = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(POPULAR_PATH)
-                .appendQueryParameter(API_KEY_PARAM,context.getString(R.string.api_key_value))
+                .appendQueryParameter(API_KEY_PARAM, context.getString(R.string.api_key_value))
                 .build();
-        Log.d(NETWORK_TAG,requestURL.toString());
-
-        HttpURLConnection urlConnection = null;
-        BufferedReader reader = null;
+        Log.d(Tag,uriToAPI.toString());
+        HttpURLConnection urlConnection;
+        BufferedReader reader;
 
         try {
-            //Final URL for request
-            URL url = new URL(requestURL.toString());
-
-            //Setting parameters to my connection
+            URL url = new URL(uriToAPI.toString());
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-
-            //Read the input stream into String
             InputStream inputStream = urlConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
-            if (inputStream == null){
-                return false; //Nothing to do.
+            if(inputStream==null){
+                return false;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             String line;
-            while ((line = reader.readLine()) != null){
-                buffer.append(line + "\n");
+            while ((line=reader.readLine())!=null){
+                buffer.append(line+"\n");
             }
 
-            if (buffer.length() == 0){
-                return false; //Has no lines. String is empty
+            if(buffer.length()==0){/////no tiene lineas.
+                return false;
             }
 
-            responseJsonStr = buffer.toString();
-            Log.d(NETWORK_TAG, "Server Response: " + responseJsonStr);
-            return true;
+            response = buffer.toString();
+            Log.d(Tag,"Server response: "+response);
+            respuesta=true;
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            Log.e(NETWORK_TAG,e.toString());
+            Log.e(Tag,e.toString());
             return false;
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(NETWORK_TAG,e.toString());
+            Log.e(Tag,e.toString());
             return false;
         }
+
+
+        return respuesta;
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (result){
-            //I have information
-            if (listener != null){
-                listener.OnSuccessfullyResponse(responseJsonStr);
+        if(result){
+            if(listener!=null){
+                listener.OnSuccessfullyResponse(response);
             }
-        }else {
-            //Something was wrong.
-            if (listener != null){
+        }else{
+            if(listener!=null){
                 listener.OnFailedResponse();
             }
         }
+
+
     }
 }
+//41936823

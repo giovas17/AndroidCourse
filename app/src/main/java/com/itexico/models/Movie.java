@@ -1,18 +1,15 @@
 package com.itexico.models;
 
-/**
- * Created by darkgeat on 10/03/2017.
- */
-
 public class Movie {
     private int id;
-    private String title;
-    private String poster;
+    private String title,description,posterPath;
 
-    public Movie(int id, String title, String poster) {
+
+    public Movie(int id, String title, String description, String posterPath) {
         this.id = id;
         this.title = title;
-        this.poster = poster;
+        this.description = description;
+        this.posterPath = posterPath;
     }
 
     public int getId() {
@@ -31,11 +28,19 @@ public class Movie {
         this.title = title;
     }
 
-    public String getPoster() {
-        return poster;
+    public String getDescription() {
+        return description;
     }
 
-    public void setPoster(String poster) {
-        this.poster = poster;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 }

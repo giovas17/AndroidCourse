@@ -1,59 +1,47 @@
 package com.itexico.androidcourse;
-
-import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
-public class MainActivity extends AppCompatActivity {
+import com.itexico.adapters.MoviesAdapter;
+import com.itexico.interfaces.NetworkConnectionInterface;
+import com.itexico.json_utils.JsonParser;
+import com.itexico.models.Movie;
+import com.itexico.network.NetworkConnection;
 
-    private EditText username;
-    private EditText password;
+import java.util.ArrayList;
 
+public class MainActivity extends AppCompatActivity implements NetworkConnectionInterface {
+    private final String TAG = MainActivity.class.getSimpleName();
+    private RecyclerView lista;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        username = (EditText)findViewById(R.id.usernameText);
-        password = (EditText)findViewById(R.id.passwordText);
-        Button login = (Button)findViewById(R.id.buttonLogin);
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (passValidation()){
-                    Intent intent = new Intent(MainActivity.this,SimpleListActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+        lista = (RecyclerView) findViewById(R.id.listaPeliculas);
 
-        Uri.Builder builder = Uri.parse("http://www.google.com").buildUpon();
-        builder.appendPath("param");
-        builder.appendPath("slack");
-        builder.appendQueryParameter("id","0923849023");
-        builder.appendQueryParameter("name","Giovas");
-        Uri finalUri = builder.build();
-        Log.d("Uri builder","url: " + finalUri.toString());
+        lista.setLayoutManager(new GridLayoutManager(this,2));
+        lista.setHasFixedSize(true);
+
+        NetworkConnection connection = new NetworkConnection(this, this);
+        connection.execute();
+
 
     }
 
-    private boolean passValidation() {
-        boolean passValidation = true;
-        username.setError(null);
-        password.setError(null);
-        if (username.getText().toString().length() == 0){
-            username.setError(getString(R.string.error_username_empty));
-            passValidation = false;
-        }
-        if (password.getText().toString().length() == 0){
-            password.setError(getString(R.string.error_password_empty));
-            passValidation = false;
-        }
-        return passValidation;
+    @Override
+    public void OnSuccessfullyResponse(String response) {
+        ArrayList<Movie> peliculas = JsonParser.getMovies(this,response);
+        MoviesAdapter adapter = new MoviesAdapter(this,peliculas);
+        lista.setAdapter(adapter);
+    }
+
+    @Override
+    public void OnFailedResponse() {
+
     }
 }
